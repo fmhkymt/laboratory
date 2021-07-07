@@ -10,13 +10,16 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Public outDirSuffix As String
+Public objExcel As Excel.Application
 
 ' Excelファイルを開きソースファイルをエクスポートする
 ' [引数]
 ' fileName Excelファイル名
 Public Sub openAndExportSrc(ByVal fileName As String)
+
     Dim trgBook As Workbook
-    Set trgBook = Workbooks.Open(fileName, , True)
+    Set trgBook = objExcel.Workbooks.Open(fileName, , True)
+    
     logInfo fileName, "ファイルを開きました."
     If trgBook Is Nothing Then
         logError fileName, "Excelファイルのオープンに失敗しました。"

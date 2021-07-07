@@ -15,18 +15,43 @@ Private Sub cmdExec_Click()
     Dim fileName As String
     
     Dim tool As New SrcExportTool
+    Set tool.objExcel = CreateObject("Excel.Application")
     tool.outDirSuffix = Range("OutDirSuffix")
     
     logClear
     
+    
+    Dim trgFiles() As String, trgFileCount As Integer
+    trgFileCount = 0
+    
+    
     For i = Range("lblTargetFiles").Rows.Row To Range("lblLog").Rows.Row - 2
         fileName = Trim(Cells(i, 3).Text)
         If fileName <> "" Then
-            tool.openAndExportSrc fileName
+            ReDim Preserve trgFiles(trgFileCount)
+            trgFiles(trgFileCount) = fileName
+            trgFileCount = trgFileCount + 1
         End If
     Next i
- 
     
+    
+    
+    
+    'プログレスバー初期化
+    FrmProgress.initProgress trgFileCount
+    
+    '処理実施
+    For i = 0 To trgFileCount - 1
+        FrmProgress.updateProgress i
+        tool.openAndExportSrc trgFiles(i)
+    Next i
+    
+    '処理終了
+    FrmProgress.updateProgress trgFileCount
+    FrmProgress.Hide
+ 
+    tool.objExcel.Quit
+    Set tool.objExcel = Nothing
     
     
 End Sub
@@ -48,15 +73,15 @@ Private Sub cmdFileSelect_Click()
     ChDrive fso.GetDriveName(ThisWorkbook.Path)
     ChDir ThisWorkbook.Path
     myFile = Application.GetOpenFilename("Excelマクロ有効ブック(*.xlsm),*.xlsm", , "処理対象ファイルの選択(複数選択可)", , True)
-    For j = 1 To UBound(myFile)
-        For i = Range("lblTargetFiles").Rows.Row To Range("lblLog").Rows.Row - 2
-            If Trim(Cells(i, 3).Text) = "" Then
-                Cells(i, 3).Value = myFile(j)
-                Exit For
-            End If
-        Next i
-        
-    Next
-    
-        
+    If VarType(myFile) And vbArray Then
+        For j = 1 To UBound(myFile)
+            For i = Range("lblTargetFiles").Rows.Row To Range("lblLog").Rows.Row - 2
+                If Trim(Cells(i, 3).Text) = "" Then
+                    Cells(i, 3).Value = myFile(j)
+                    Exit For
+                End If
+            Next i
+            
+        Next
+    End If
 End Sub
