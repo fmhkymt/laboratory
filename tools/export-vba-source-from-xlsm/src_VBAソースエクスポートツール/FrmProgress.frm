@@ -13,9 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Private Sub UserForm_Click()
-    
-End Sub
 
 'êiíª0Ç≈ï\é¶Ç∑ÇÈ
 Public Sub initProgress(ByVal max As Integer)
@@ -36,3 +33,6 @@ Public Sub updateProgress(ByVal count As Integer)
 
 End Sub
 
+Private Sub UserForm_Click()
+
+End Sub

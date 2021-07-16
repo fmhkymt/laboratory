@@ -28,11 +28,11 @@ Public Sub openAndExportSrc(ByVal fileName As String)
     logInfo fileName, "エクスポート開始"
     exportSrc trgBook
     logInfo fileName, "エクスポート終了"
-    trgBook.Close
+    trgBook.Close False
     logInfo fileName, "ファイルを閉じました"
 End Sub
 
-
+'ソースファイルをエクスポートする
 Private Sub exportSrc(ByRef trgBook As Workbook)
     Dim module As VBComponent
     Dim extension As String
@@ -45,6 +45,8 @@ Private Sub exportSrc(ByRef trgBook As Workbook)
     If Dir(outPath, vbDirectory) = "" Then
         MkDir outPath
     End If
+    
+
     
     '全てのモジュール
     For Each module In trgBook.VBProject.VBComponents
@@ -68,5 +70,9 @@ Private Sub exportSrc(ByRef trgBook As Workbook)
         logInfo outFileName, "ソースをエクスポートしました。"
     Next
     
+    
+    
+    
 End Sub
+
 

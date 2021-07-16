@@ -11,6 +11,10 @@ Option Explicit
 
 Private Sub cmdExec_Click()
     
+        
+    If chkExcelOption = False Then Exit Sub '設定不備なら即終了
+        
+    
     Dim i As Integer
     Dim fileName As String
     
@@ -34,6 +38,10 @@ Private Sub cmdExec_Click()
         End If
     Next i
     
+    If trgFileCount = 0 Then
+        MsgBox "先に処理対象ファイルを選んでください。", vbExclamation
+        Exit Sub
+    End If
     
     
     
@@ -85,3 +93,24 @@ Private Sub cmdFileSelect_Click()
         Next
     End If
 End Sub
+
+'オブジェクトモデルのアクセスを信頼する設定になっているかどうかチェック
+Private Function chkExcelOption() As Boolean
+    
+    Dim d As Integer
+    On Error GoTo ErrorChkExcelOption
+    
+    d = ThisWorkbook.VBProject.VBComponents.count
+    chkExcelOption = True
+    Exit Function
+    
+ErrorChkExcelOption:
+    'エラーが出たなら設定不備
+    MsgBox "オブジェクトモデルのアクセスを信頼する設定が出来ておりません。" + vbCrLf + "「事前設定方法」シートに従いExcelの設定を変更してください。", vbCritical, "Excel設定エラー"
+    Sheets("事前設定方法").Select
+        
+    chkExcelOption = False
+    
+    
+
+End Function
